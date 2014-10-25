@@ -7,6 +7,9 @@ var rfb = require('./constants');
 
 var RFB_PORT = 5910;
 
+var FB_WIDTH = 800;
+var FB_HEIGHT = 600;
+
 function RfbServer(stream, params)
 {
      EventEmitter.call(this);
@@ -101,8 +104,8 @@ RfbServer.prototype.writeServerInit = function()
     var serv = this;
     var title = 'Param-pam-pam';
     serv.pack_stream.pack('SSCCCCSSSCCCxxxLa', [
-        800, //serv.width,
-        600, //serv.height,
+        FB_WIDTH, //serv.width,
+        FB_HEIGHT, //serv.height,
         32, //serv.bpp,
         24, //serv.depth,
         1, // bigEndien
