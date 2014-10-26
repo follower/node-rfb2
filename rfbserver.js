@@ -194,6 +194,37 @@ RfbServer.prototype.expectMessage = function()
 
 var s = net.createServer(function(conn) {
     var rfbserv = new RfbServer(conn);
+
+    // Provides a demo of multi-colored random "static" on the display
+    // TODO: Put this somewhere else? / Handle differently?
+    rfbserv.on('fbUpdate', function (updateRequest) {
+
+	var serv = rfbserv;
+
+	var frameFormat = 'CCSSSSSL' + repeat('L', FB_WIDTH * FB_HEIGHT);
+	var frameData = [0, // FramebufferUpdate
+			 0, // Padding
+			 1, // Number of rectangles
+
+			 // Rectangle
+			 0, // X position
+			 0, // Y position
+			 FB_WIDTH, // Width
+			 FB_HEIGHT, // Height
+			 0, // Encoding type,
+			];
+
+	// TODO: Don't have to pre-create the pixel data?
+	for(var i = 0; i < ((FB_WIDTH*FB_HEIGHT) - 0); i++) {
+            frameData.push(Math.random()*0xffffff );
+	};
+
+	serv.pack_stream.pack(frameFormat, frameData);
+
+	serv.pack_stream.flush();
+
+    });
+
 });
 
 s.listen(RFB_PORT, function () {
